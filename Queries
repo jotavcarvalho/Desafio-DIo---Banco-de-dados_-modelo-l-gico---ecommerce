@@ -1,0 +1,49 @@
+-------------------- QUERIES
+
+select * from pedido;
+
+-- Filtros com WHERE Statement
+select * from pedido where IDPEDIDO = 1;
+
+
+-- Defina ordenações dos dados com ORDER BY
+select PNOME,CLASSIFICACAO_KIDS, CATEGORIA 
+from Produto 
+order by PNOME ASC;
+
+
+-- Crie junções entre tabelas para fornecer uma perspectiva mais complexa dos dados
+	SELECT C.FNOME, C.CPF, P.PNOME,P.pnome
+	FROM CLIENTE C
+	INNER JOIN PRODUTO P
+	ON P.IDPRODUTO = C.IDCLIENTE;
+-- PERGUNTAS
+-- 1) Quantos pedidos foram feitos por cada cliente?
+select Count(P.ID_Cliente), C.FNome
+    from Pedido p
+    inner join Cliente c 
+	on p.id_Cliente = c.idCLIENTE
+    group by p.id_Cliente, c.FNome;
+
+-- 2) Algum vendedor também é fornecedor?
+select f.RazaoSocial
+ from fornecedor f 
+ where f.CNPJ in (select v.CNPJ from Vendedor v);
+
+-- 3) Relação de produtos fornecedores e estoques;
+select f.RazaoSocial, p.pnome, el.localidade
+    from Produto p
+    inner join ProdutoFornecedor pf 
+	on p.idproduto = pf.IDPF_PRODUTO
+    inner join Fornecedor f 
+	on f.idfornecedor = pf.IDPF_FORNECEDOR
+    inner join estoquelocal el
+	on p.idproduto = el.IDELPRODUTO;
+
+-- 4) Relação de nomes dos fornecedores e nomes dos produtos;
+select f.RazaoSocial as Fornecedor, p.pnome as Produto
+    from Produto p
+    inner join ProdutoFornecedor pf 
+	on p.idproduto = pf.IDPF_PRODUTO
+    inner join Fornecedor f 
+	on f.idfornecedor = pf.IDPF_FORNECEDOR;
